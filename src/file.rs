@@ -1,7 +1,7 @@
 use crate::cli::AppSettings;
 use crate::error::Error;
 use crate::http::download_file;
-use crate::website::Website;
+use crate::website::{Website, WebsitesTomlFormat};
 use std::fs;
 use std::path::Path;
 
@@ -29,8 +29,10 @@ pub async fn parse_website_list(settings: &AppSettings) -> Result<Vec<Website>, 
 
     // TOML literals
     for toml in &settings.toml_lists {
-        let mut list: Vec<Website> = toml::from_str(toml)
-            .map_err(|e| Error::StringError(format!("Failed to parse TOML literal: {e}")))?;
+        let mut list = match toml::from_str::<WebsitesTomlFormat>(toml) {
+            Ok(d) => Ok(d.websites),
+            Err(e) => Err(Error::StringError(format!("Failed to parse TOML literal: {e}"))),
+        }?;
         all_websites.append(&mut list);
     }
 
@@ -41,8 +43,10 @@ pub async fn parse_website_list(settings: &AppSettings) -> Result<Vec<Website>, 
         let mut list = match ext.as_str() {
             "json" => serde_json::from_str::<Vec<Website>>(&file_data)
                 .map_err(|e| Error::StringError(format!("Failed to parse JSON file '{}': {}", path, e)))?,
-            "toml" => toml::from_str::<Vec<Website>>(&file_data)
-                .map_err(|e| Error::StringError(format!("Failed to parse TOML file '{}': {}", path, e)))?,
+            "toml" => match toml::from_str::<WebsitesTomlFormat>(&file_data) {
+                Ok(d) => Ok(d.websites),
+                Err(e) => Err(Error::StringError(format!("Failed to parse TOML file '{}': {}", path, e))),
+            }?,
             "csv" => parse_csv_websites(&file_data)
                 .map_err(|e| Error::StringError(format!("Failed to parse CSV file '{}': {}", path, e)))?,
             other => return Err(Error::StringError(format!("Unsupported file format '{}'", other))),
@@ -135,5 +139,26 @@ mod tests {
         let path = "archive.tar.gz";
         let result = get_extension_from_path(path);
         assert_eq!(result, Some("gz".to_string()));
+    }
+
+    #[tokio::test]
+    async fn test_parse_website_list_toml_filepath_list() {
+        let settings = AppSettings {
+            filepath_list: vec!["websites.toml".to_string()],
+            ..Default::default()
+        };
+        let result = parse_website_list(&settings).await.unwrap();
+        assert_eq!(result.len(), 5);
+    }
+
+    #[tokio::test]
+    async fn test_parse_website_list_toml_lists() {
+        let settings = AppSettings {
+            filepath_list: vec![],
+            toml_lists: vec![fs::read_to_string("websites.toml").unwrap()],
+            ..Default::default()
+        };
+        let result = parse_website_list(&settings).await.unwrap();
+        assert_eq!(result.len(), 5);
     }
 }
