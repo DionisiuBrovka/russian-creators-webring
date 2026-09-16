@@ -1,24 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="./styles.css">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>{{ ring_name }} List</title>
-	</head>
-	<body>
-		<div class="cards-container">
-		<h1>{{ ring_name }} List</h1>
-			<p>{{ ring_description }}</p>
-			<p>Add all sites with declared RSS feeds to your feed reader with this <a href ="{{ opml }}">OPML</a> link.</p>
+	<title>Каталог — {{ ring_name }}</title>
+</head>
 
-			{{ grid_of_sites | safe }}
+<body>
+	<main class="container">
+		<header class="masthead">
+		<p class="eyebrow">независимые сайты на русском</p>
+		<h1>Каталог</h1>
+		<p>{{ ring_description }}</p>
+		<p><a href="./index.html">← На главную</a> · <a href="{{ opml }}">OPML</a></p>
+		</header>
 
-			<br>
-			<footer>
-				<p>Last updated: {{ current_time }} </p>
-				<p>Powered by <a href="https://github.com/k3rs3d/ringfairy">ringfairy</a>!</p>
-			</footer>
-		</div>
-  </body>
+		{{ grid_of_sites | safe }}
+	</main>
+	<footer class="footer">обновлено {{ current_time }} · работает на <a href="https://github.com/k3rs3d/ringfairy">ringfairy</a></footer>
+</body>
+
 </html>

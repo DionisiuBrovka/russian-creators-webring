@@ -1,61 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ ring_description }}">
   <link rel="stylesheet" href="./styles.css">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ ring_name }} List</title>
-  </head>
-  <body>
-    <h1>{{ ring_name }} List</h1>
-	<p>{{ ring_description }}</p>
-    <p>Add all sites with declared RSS feeds to your feed reader with this <a href ="{{ opml }}">OPML</a> link.</p>
-    
-  {% if sites %}
-  <table>
-    <thead>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">URL</th>
-            <th scope="col">About</th>
-            <th scope="col">Owner</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for site in sites %}
-        <tr>
-            <td>{{ site.website.slug }}</td>
-            <td>
-                <a href="{{ site.website.url }}" target="_blank">{{ site.website.url }}</a>
-                {% if site.website.rss %}
-                  <a href="{{ site.website.rss }}" target="_blank">[rss]</a>
-                {% endif %}
-                {% if site.website.atom %}
-                  <a href="{{ site.website.atom }}" target="_blank">[atom]</a>
-                {% endif %}
-            </td>
-            <td>{{ site.website.about | default(value="") }}</td>
-            <td>{{ site.website.owner | default(value="") }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-  </table>
-  {% endif %}
+  <title>{{ ring_name }}</title>
+</head>
 
-  {% if failed_sites %}
-  The following member sites were not included in this iteration of the webring:
-  <ul>
-    {% for site in failed_sites %}
-        <li>{{ site.website.url }}</li>
-    {% endfor %}
-  </ul>
-  {% endif %}
-  
+<body>
+  <main class="container">
+    <header class="masthead">
+      <p class="eyebrow">независимые сайты на русском</p>
+      <h1>{{ ring_name }}</h1>
+      <p class="lead">{{ ring_description }}</p>
+      <p>Это сообщество людей и проектов, а не стран, национальностей или политики.</p>
+      <p class="actions"><a href="#join">[ вступить ]</a>{% if sites %} · <a href="./random.html">[ случайный сайт ]</a>{% endif %}</p>
+    </header>
 
-	<br>
-	<footer>
-	  <p>Last updated: {{ current_time }} </p>
-	  <p>Powered by <a href="https://github.com/k3rs3d/ringfairy">ringfairy</a>!</p>
-	</footer>
-  </body>
+    <section aria-labelledby="members-title">
+      <h2 id="members-title">Участники <span class="count">{{ number_of_sites }}</span></h2>
+      {% if sites %}
+      <table class="members">
+        <thead>
+          <tr><th>Сайт</th><th>Описание</th><th>Автор</th></tr>
+        </thead>
+        <tbody>
+        {% for site in sites %}
+        <tr>
+          <td><a href="{{ site.website.url }}" rel="noopener">{{ site.website.name | default(value=site.website.slug) }}</a></td>
+          <td>{{ site.website.about | default(value="") }}</td>
+          <td>{{ site.website.owner | default(value="") }}{% if site.website.rss %} · <a
+              href="{{ site.website.rss }}">RSS</a>{% elif site.website.atom %} · <a
+              href="{{ site.website.atom }}">Atom</a>{% endif %}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      <p><a href="./grid.html">Каталог карточками</a>{% if opml %} · <a href="{{ opml }}">RSS/Atom через
+          RSS/Atom через OPML</a>{% endif %}</p>
+      {% else %}
+      <p class="empty">Кольцо только открывается. Первый сайт может быть вашим.</p>
+      {% endif %}
+    </section>
+
+    <section id="join" aria-labelledby="join-title">
+      <h2 id="join-title">Как вступить</h2>
+      <ol>
+        <li>Убедитесь, что у вас есть самостоятельный сайт с заметным содержанием на русском языке.</li>
+        <li>Добавьте на сайт этот блок, заменив <code>your-slug</code> на согласованный идентификатор:</li>
+      </ol>
+      <pre><code>&lt;nav aria-label="Russian Creators Web Ring"&gt;
+  &lt;a href="{{ base_url }}/your-slug/previous/"&gt;← Предыдущий&lt;/a&gt;
+  &lt;a href="{{ base_url }}/your-slug/next/"&gt;Следующий →&lt;/a&gt;
+&lt;/nav&gt;</code></pre>
+      <ol start="3">
+        <li>Откройте issue в <a
+            href="https://github.com/DionisiuBrovka/russian-creators-webring/issues/new/choose">репозитории кольца</a>,
+          указав название сайта, URL, короткое описание, имя автора и при наличии RSS/Atom.</li>
+      </ol>
+      <p>Не подходят сайты с политической агитацией, травлей, незаконным содержимым или страницы без собственного
+        устойчивого содержания. Решение о включении остаётся за модерацией.</p>
+    </section>
+  </main>
+  <footer class="footer">обновлено {{ current_time }} · работает на <a
+      href="https://github.com/k3rs3d/ringfairy">ringfairy</a></footer>
+</body>
+
 </html>
