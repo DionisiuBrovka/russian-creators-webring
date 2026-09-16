@@ -5,5 +5,13 @@
     "about": "Небольшой цифровой уголок Dionisiu Brovka - личный сайт, где мысли, проекты и случайные находки получают собственную страницу.",
     "url": "https://personal-page.matafata.xyz/",
     "owner": "Dionisiu Brovka"
+  },
+  {
+    "slug": "zaraz7",
+    "name": "Zaraz7 mir~$",
+    "about": "Просто сайт художника любителя.",
+    "url": "https://zaraz7.narod.ws/",
+    "rss": "https://zaraz7.narod.ws/img.xml",
+    "owner": "Zaraz7"
   }
 ]
