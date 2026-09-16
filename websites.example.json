@@ -1,0 +1,10 @@
+[
+  {
+    "slug": "moy-sait",
+    "name": "Мой сайт",
+    "about": "Коротко: о чём этот сайт и зачем на него заходить.",
+    "url": "https://example.org/",
+    "owner": "Имя или псевдоним",
+    "rss": "https://example.org/feed.xml"
+  }
+]
