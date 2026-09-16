@@ -46,18 +46,20 @@ pub trait Generator: Send + Sync {
     }
 
     async fn precompute_tags(webring: &WebringSiteList, settings: &AppSettings) -> PrecomputedTags {
-        let featured_site = webring.sites.choose(&mut rand::thread_rng()).unwrap();
+        let featured_site = webring.sites.choose(&mut rand::thread_rng());
 
         PrecomputedTags {
             number_of_sites: webring.sites.len(),
             current_time: chrono::Local::now().format("%Y-%m-%d %H:%M:%S").to_string(),
             featured_site_name: featured_site
-                .website
-                .name
-                .clone()
-                .unwrap_or_else(|| featured_site.website.url.clone()),
-            featured_site_description: featured_site.website.about.clone().unwrap_or_default(),
-            featured_site_url: featured_site.website.url.clone(),
+                .and_then(|site| site.website.name.clone())
+                .unwrap_or_default(),
+            featured_site_description: featured_site
+                .and_then(|site| site.website.about.clone())
+                .unwrap_or_default(),
+            featured_site_url: featured_site
+                .map(|site| site.website.url.clone())
+                .unwrap_or_default(),
             opml_link: format!("./{}.opml", &settings.ring_name),
         }
     }

@@ -136,13 +136,6 @@ pub async fn generate_webring_files(settings: &AppSettings) -> Result<(), Error>
         websites
     };
 
-    // Ensure the list isn't empty at this point
-    if audited_websites.is_empty() {
-        return Err(Error::StringError(
-            "No valid sites passed the audit.".to_string(),
-        ));
-    }
-
     // Organize sites into the webring sequence
     let webring = WebringSiteList {
         sites: build_webring_sequence(audited_websites, settings).await,

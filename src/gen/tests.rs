@@ -221,6 +221,21 @@ async fn test_precompute_tags() {
 }
 
 #[tokio::test]
+async fn test_precompute_tags_for_empty_ring() {
+    let webring = WebringSiteList {
+        sites: vec![],
+        failed_sites: vec![],
+    };
+    let settings = mock_app_settings();
+
+    let tags = HtmlGenerator::precompute_tags(&webring, &settings).await;
+
+    assert_eq!(tags.number_of_sites, 0);
+    assert!(tags.featured_site_name.is_empty());
+    assert!(tags.featured_site_url.is_empty());
+}
+
+#[tokio::test]
 async fn test_ensure_output_directory() {
     let path = "output_dir";
 
