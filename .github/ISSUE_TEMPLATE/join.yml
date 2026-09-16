@@ -1,0 +1,52 @@
+name: Вступить в веб-кольцо
+description: Подать сайт в Russian Creators Web Ring
+title: "Заявка: "
+labels: ["заявка"]
+body:
+  - type: markdown
+    attributes:
+      value: "Спасибо за интерес к кольцу. Перед отправкой прочитайте MEMBERSHIP.md и установите навигационный блок."
+  - type: input
+    id: name
+    attributes:
+      label: Название сайта
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: URL сайта
+      placeholder: https://example.org/
+    validations:
+      required: true
+  - type: textarea
+    id: about
+    attributes:
+      label: Короткое описание
+      description: Одно–два предложения для каталога.
+    validations:
+      required: true
+  - type: input
+    id: owner
+    attributes:
+      label: Имя или псевдоним автора
+    validations:
+      required: true
+  - type: input
+    id: slug
+    attributes:
+      label: Желаемый slug
+      description: Строчные латинские буквы, цифры и дефисы; например my-site.
+    validations:
+      required: true
+  - type: input
+    id: feed
+    attributes:
+      label: RSS или Atom (необязательно)
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Подтверждение
+      options:
+        - label: На сайте установлены ссылки «Предыдущий» и «Следующий» из инструкции.
+          required: true
