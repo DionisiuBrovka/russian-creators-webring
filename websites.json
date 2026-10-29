@@ -15,11 +15,18 @@
     "rss": "https://zaraz7.narod.ws/img.xml",
     "owner": "Zaraz7"
   },
-    {
+  {
     "slug": "gay",
     "name": "PRAY",
     "about": "цифровое убежище юзернейма PRAY",
     "url": "https://pray-xdd.ru",
     "owner": "PRAY"
+  },
+  {
+    "slug": "MyInternetCountry",
+    "name": "MyInternetCountry",
+    "about": "Ретро-портал который совмещает в себе форум и социальную сеть. Работает даже в IE4, Lynx и Links! Оптимизирован под 2G и есть telnet доступ!",
+    "url": "https://myintcountry.ru/",
+    "owner": "BBCSystem"
   }
 ]
