@@ -28,5 +28,12 @@
     "about": "Ретро-портал который совмещает в себе форум и социальную сеть. Работает даже в IE4, Lynx и Links! Оптимизирован под 2G и есть telnet доступ!",
     "url": "https://myintcountry.ru/",
     "owner": "BBCSystem"
+  },
+  {
+    "slug": "expert5",
+    "name": "expert5site",
+    "about": "Мой личный сайт/Блог",
+    "url": "http://expert5.neocities.org/",
+    "owner": "Владимир"
   }
 ]
