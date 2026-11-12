@@ -35,5 +35,12 @@
     "about": "Мой личный сайт/Блог",
     "url": "http://expert5.neocities.org/",
     "owner": "Владимир"
+  },
+  {
+    "slug": "flashkeno",
+    "name": "Fлешкино",
+    "about": "Fлешкино - это попытка собрать в единую кучу персональный, самодельный, переферийный Рунет.",
+    "url": "https://flashkeno.mooo.com/",
+    "owner": "Zaraz7"
   }
 ]
