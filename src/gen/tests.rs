@@ -251,6 +251,35 @@ async fn test_ensure_output_directory() {
 }
 
 #[tokio::test]
+async fn test_broken_lt_entity_from_minifier() {
+    // minify-html 0.15 escapes a raw `<` in text content as `&LT` plus the next
+    // character (e.g. `<a` -> `&LTa`), which is not a valid HTML5 entity.
+    use minify_html::{minify, Cfg};
+
+    let mut cfg = Cfg::new();
+    cfg.minify_css = true;
+    cfg.minify_js = true;
+
+    let html = br#"<!doctype html><html><body><pre><code>&lt;a href="https://example.com/"&gt;RCWR&lt;/a&gt;</code></pre></body></html>"#;
+    let minified = String::from_utf8(minify(html, &cfg)).unwrap();
+    assert!(minified.contains("&LTa"), "minifier is expected to emit the broken escape");
+
+    let fixed = super::html::BROKEN_LT_ENTITY
+        .replace_all(&minified, "&lt;$1")
+        .into_owned();
+    assert!(!fixed.contains("&LT"), "no broken escape may remain: {fixed}");
+    assert!(fixed.contains("&lt;a href="), "open tag must be escaped: {fixed}");
+    assert!(fixed.contains("&lt;/a"), "close tag must be escaped: {fixed}");
+
+    // Valid entities must not be touched.
+    let sample = "&lt;nav&gt; and &LT;;";
+    assert_eq!(
+        super::html::BROKEN_LT_ENTITY.replace_all(sample, "&lt;$1").into_owned(),
+        sample
+    );
+}
+
+#[tokio::test]
 async fn test_audit_websites() {
     // Mock settings and website
     let settings = mock_app_settings();

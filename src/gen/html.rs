@@ -1,8 +1,19 @@
+use lazy_static::lazy_static;
 use minify_html::{minify, Cfg};
 use opml::{Head, OPML};
+use regex::Regex;
 use std::fs;
 use std::path::{Path, PathBuf};
 use tera::{Context, Tera};
+
+lazy_static! {
+    /// minify-html 0.15 escapes a raw `<` in text content as `&LT` plus the following
+    /// character (e.g. `<a` becomes `&LTa`). Entity names are case-sensitive and only
+    /// lowercase names may omit the semicolon, so browsers render `&LTa` literally.
+    /// Rewrite the broken escape to the valid `&lt;`.
+    pub(crate) static ref BROKEN_LT_ENTITY: Regex =
+        Regex::new(r"&LT([0-9A-Za-z:/.!?-])").unwrap();
+}
 
 use super::*;
 use crate::cli::AppSettings;
@@ -36,7 +47,8 @@ impl Generator for HtmlGenerator {
             content.to_string()
         } else {
             let minified = minify(content.as_bytes(), &self.cfg);
-            String::from_utf8(minified)?
+            let content = String::from_utf8(minified)?;
+            BROKEN_LT_ENTITY.replace_all(&content, "&lt;$1").into_owned()
         };
 
         file.write_all(final_content.as_bytes())?;
